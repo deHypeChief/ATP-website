@@ -1,7 +1,6 @@
 import Button from "../components/button/button";
 import Card from "../components/card/card";
-import line from "../libs/images/line.png"
-
+import line from "../libs/images/Line.png";
 
 export default function Tournament(){
     const tags = [
