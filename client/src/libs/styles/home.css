@@ -89,6 +89,8 @@
     .cardWrap {
         margin-top: 60px;
         display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         gap: 30px;
     }
 }
@@ -160,6 +162,9 @@
 
 .pair {
     margin-top: 150px;
+    .bonm{
+        margin-bottom: 30px;
+    }
 
     .aboutWrap {
         display: flex;
@@ -253,24 +258,27 @@ padding-bottom: 50px;
 
     .newsInput {
         margin-top: 30px;
-        .inputN {
-            border: var(--set-border);
-            border-color: var(--color-blue);
-            width: fit-content;
-            border-radius: 10px;
-            overflow: hidden;
-            input {
-                /* height: 43px; */
-                font-size: 1rem;
-                padding: 10px 0px 10px 30px;
-                width: 400px;
-                border: none;
-                outline: none;
-            }
-        }
+        
     } 
 }
 .newWall{
     padding-top: 80px;
     height: 80vh;
+}
+
+.inputN {
+    margin-top: 20px;
+    border: var(--set-border);
+    border-color: var(--color-blue);
+    width: fit-content;
+    border-radius: 10px;
+    overflow: hidden;
+    input {
+        /* height: 43px; */
+        font-size: 1rem;
+        padding: 10px 0px 10px 30px;
+        width: 400px;
+        border: none;
+        outline: none;
+    }
 }

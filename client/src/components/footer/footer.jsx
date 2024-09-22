@@ -3,7 +3,7 @@ import "./style.css"
 
 export default function Footer(){
     return(
-        <footer>
+        <footer id="#us">
             <div className="logoFooter">
                 <div className="logoBox">
                     <img src={logo} alt="" />

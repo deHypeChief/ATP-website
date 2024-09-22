@@ -1,0 +1,14 @@
+.vCardl {
+    text-align: center;
+    .vBox {
+        height: 300px;
+        width: 260px;
+        border-radius: 10px;
+    }
+
+    p {
+        padding: 0 20px;
+        padding-top: 10px;
+        /* width: 300px; */
+    }
+}

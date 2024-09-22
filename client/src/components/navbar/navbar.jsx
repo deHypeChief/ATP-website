@@ -15,24 +15,22 @@ export default function Navbar() {
         },
         {
             name: "Coaching",
-            link: "#"
+            link: "/coaching"
         },
         {
             name: "Video Library",
-            link: "#"
-        },
-        {
-            name: "Contact Us",
-            link: "#"
+            link: "/videos"
         },
     ]
 
     return (
         <nav>
             <div className="navbar">
-                <div className="logo">
-                    <img src={logo} alt="" />
-                </div>
+                <Link to={"/"}>
+                    <div className="logo">
+                        <img src={logo} alt="" />
+                    </div>
+                </Link>
                 <div className="navList">
                     {
                         link.map((item) => (
@@ -41,6 +39,9 @@ export default function Navbar() {
                             </ul>
                         ))
                     }
+                    <ul>
+                        <a href="#us">Contact Us</a>
+                    </ul>
                 </div>
                 <div className="navAction">
                     <Button>Get Started</Button>
