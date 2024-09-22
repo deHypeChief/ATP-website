@@ -1,0 +1,49 @@
+footer{
+    margin-top: 60px;
+    padding: var(--set-spacing);
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background: var(--color-blue);
+    color: white;
+    hr{
+        margin: 50px 0;
+        border: 1px solid white;
+    }
+}
+
+.logoFooter {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    .logoBox {
+        width: 300px;
+    }
+}
+
+.logoList {
+    display: flex;
+    justify-content: space-between;
+
+    .lBox {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+
+        h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+    }
+}
+
+.logoCO{
+    display: flex;
+    gap: 20px;
+
+    .coBox{
+        height: 200px;
+        flex: 1;
+        background: white;
+
+    }
+}

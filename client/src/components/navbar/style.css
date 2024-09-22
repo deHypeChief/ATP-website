@@ -1,0 +1,17 @@
+nav{
+    position: fixed;
+    width: 100%;
+    padding: var(--set-spacing);
+
+    .navbar{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+
+        .navList{
+            display: flex;
+            gap: 30px;
+        }
+    }
+}
