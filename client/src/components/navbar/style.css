@@ -15,3 +15,27 @@ nav{
         }
     }
 }
+
+
+@media screen and (max-width: 700px){
+    nav{
+        position: fixed;
+        width: 100%;
+        padding: var(--set-spacing);
+    
+        .navbar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+    
+            .navList{
+                display: none;
+                gap: 30px;
+            }
+            .navAction{
+                display: none;
+            }
+        }
+    }
+}

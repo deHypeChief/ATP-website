@@ -25,3 +25,11 @@
     flex-wrap: wrap;
     row-gap:40px;
 }
+
+
+@media screen and (max-width: 700px){
+    .actVids{
+        flex-direction: column;
+        row-gap:40px;
+    }
+}

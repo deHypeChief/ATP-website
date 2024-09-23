@@ -47,3 +47,20 @@ footer{
 
     }
 }
+
+
+
+@media screen and (max-width: 700px){
+    .logoFooter {
+        .logoBox {
+            width: 200px;
+        }
+    }
+    
+    .logoList {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        justify-content: space-between;
+    }
+}
