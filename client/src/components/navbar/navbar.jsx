@@ -7,7 +7,7 @@ export default function Navbar() {
     const link = [
         {
             name: "About",
-            link: "#"
+            link: "/about"
         },
         {
             name: "Tournaments",
@@ -18,8 +18,16 @@ export default function Navbar() {
             link: "/coaching"
         },
         {
+            name: "Resources",
+            link: "/resources"
+        },
+        {
             name: "Video Library",
             link: "/videos"
+        },
+        {
+            name: "Contact Us",
+            link: "/contact"
         },
     ]
 
@@ -39,9 +47,6 @@ export default function Navbar() {
                             </ul>
                         ))
                     }
-                    <ul>
-                        <a href="#us">Contact Us</a>
-                    </ul>
                 </div>
                 <div className="navAction">
                     <Button>Get Started</Button>

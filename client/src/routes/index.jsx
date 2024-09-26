@@ -1,6 +1,7 @@
 import Button from "../components/button/button"
 import Card from "../components/card/card"
-import line from "../libs/images/Line.png"
+import line2 from "../libs/images/Line.png"
+import line from "../libs/images/Line2.png"
 import "../libs/styles/home.css"
 
 export default function Home() {
@@ -10,11 +11,11 @@ export default function Home() {
                 <div className="heroWrap">
                     <div className="heroSubTop">
                         <div className="rArrow rL">
-                            <img src={line} alt="" />
+                            <img src={line2} alt="" />
                         </div>
                         <h2>Elevate Your Game</h2>
                         <div className="rArrow rR">
-                            <img src={line} alt="" />
+                            <img src={line2} alt="" />
                         </div>
                     </div>
                     <h1>Join a Community of Passionate Players</h1>
