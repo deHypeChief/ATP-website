@@ -1,7 +1,8 @@
 import Button from "../components/button/button";
 import Card from "../components/card/card";
 import Hero from "../components/hero/hero";
-import "../libs/styles/tornaments.css"
+import "../libs/styles/tornaments.css";
+import img from "../libs/images/main/IMG_3337.jpg";
 
 export default function Tournament() {
     const tags = [
@@ -18,7 +19,7 @@ export default function Tournament() {
     ]
     return (
         <>
-            <Hero title="Tournaments page" subTitle={"Compete and be among the best"} />
+            <Hero title="Tournaments page" subTitle={"Compete and be among the best"} imageUrl={img} pos="center"/>
 
             {/* upcomin */}
             <section className="upcomings">

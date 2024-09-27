@@ -7,7 +7,7 @@ export default function BlogCard({title}){
                 <div className="bTop">
                     <p>{title}</p>
                 </div>
-                <div className="vBox">
+                <div className="vBoxbb">
 
                 </div>
                 <Button full alt>Read this article on Medium</Button>

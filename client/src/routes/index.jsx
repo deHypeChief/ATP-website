@@ -3,30 +3,15 @@ import Card from "../components/card/card"
 import line2 from "../libs/images/Line.png"
 import line from "../libs/images/Line2.png"
 import "../libs/styles/home.css"
+import heroImg from "../libs/images/main/IMG_2855.jpg"
+import Hero from "../components/hero/hero"
+
 
 export default function Home() {
     return (
         <>
-            <section className="hero">
-                <div className="heroWrap">
-                    <div className="heroSubTop">
-                        <div className="rArrow rL">
-                            <img src={line2} alt="" />
-                        </div>
-                        <h2>Elevate Your Game</h2>
-                        <div className="rArrow rR">
-                            <img src={line2} alt="" />
-                        </div>
-                    </div>
-                    <h1>Join a Community of Passionate Players</h1>
-                    <p>Find your perfect match, learn from experts, and compete in thrilling tournaments.</p>
-                    <div className="heroAction">
-                        <Button>Get Started</Button>
-                        <Button alt>Learn More</Button>
-                    </div>
-                </div>
-            </section>
-
+            <Hero title={"Join a Community of Passionate Players"} subTitle={"Elevate Your Game"} text={"Find your perfect match, learn from experts, and compete in thrilling tournaments."} imageUrl={heroImg}/>
+        
             <section className="about">
                 <div className="aboutWrap">
                     <div className="aboutInfoSec">
@@ -105,7 +90,7 @@ export default function Home() {
                             <p>
                                 Description for the beginner package will be placed here
                             </p>
-                            <h3 className="amount">₦20,000/month</h3>
+                            {/* <h3 className="amount">₦20,000/month</h3> */}
                         </div>
 
                         <div className="pList">
@@ -125,7 +110,7 @@ export default function Home() {
                             <p>
                                 Description for the beginner package will be placed here
                             </p>
-                            <h3 className="amount">₦50,000/month</h3>
+                            {/* <h3 className="amount">₦50,000/month</h3> */}
                         </div>
 
                         <div className="pList">
@@ -145,7 +130,7 @@ export default function Home() {
                             <p>
                                 Description for the beginner package will be placed here
                             </p>
-                            <h3 className="amount">₦100,000/month</h3>
+                            {/* <h3 className="amount">₦100,000/month</h3> */}
                         </div>
 
                         <div className="pList">
@@ -186,7 +171,7 @@ export default function Home() {
                             <Button>Find a Coach</Button>
                         </div>
                     </div>
-                    <div className="aboutImg">
+                    <div className="aboutImg pairImg">
 
                     </div>
                 </div>

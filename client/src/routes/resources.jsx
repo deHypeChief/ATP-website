@@ -1,11 +1,13 @@
 import BlogCard from "../components/blogCard/blogCard";
 import Hero from "../components/hero/hero";
 import "../libs/styles/resources.css"
+import img from "../libs/images/main/IMG_3302.jpg";
+
 
 export default function Resources(){
     return(
         <>
-            <Hero title={"Blog and Resources"} subTitle={"Read what we have for you"} noAction/>
+            <Hero title={"Blog and Resources"} subTitle={"Read what we have for you"} noAction imageUrl={img}/>
         
             <section className="blogBox">
                 <div className="blogTopText">

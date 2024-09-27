@@ -33,3 +33,16 @@
         }
     }
 }
+
+@media screen and (max-width: 600px) {
+    .cardBox {
+        width: 100%;
+        overflow: hidden;
+
+        .cardImg {
+            border-radius: 10px 10px 0 0;
+            height: 300px;
+            background: black;
+        }
+    }
+}

@@ -2,9 +2,14 @@ import Button from "../button/button";
 import "./style.css"
 import line from "../../libs/images/Line.png"
 
-export default function Hero({ title, subTitle, text, noAction, altText }) {
+export default function Hero({ title, subTitle, text, noAction, altText, imageUrl, pos }) {
     return (
-        <section className="hero">
+        <section className="hero" style={{ 
+            backgroundImage: `url(${imageUrl})`,
+            backgroundPosition: pos || "center",
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat'
+          }}>
             <div className="heroWrap">
                 {
                     !subTitle ? null : (

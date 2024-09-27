@@ -1,4 +1,5 @@
 
+import Button from "../components/button/button"
 import "../libs/styles/contact.css"
 export default function ContactUs() {
     return (
@@ -41,6 +42,8 @@ export default function ContactUs() {
                                 </div>
                             </div>
                         </div>
+
+                        <Button>Send Message</Button>
                     </form>
 
                 </div>

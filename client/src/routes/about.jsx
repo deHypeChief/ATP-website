@@ -2,10 +2,14 @@ import Card from "../components/card/card";
 import Hero from "../components/hero/hero";
 import "../libs/styles/about.css"
 
+
+import heroImg from "../libs/images/main/IMG_2800.jpg"
+import heroImg2 from "../libs/images/main/IMG_2809.jpg"
+
 export default function About() {
     return (
         <>
-            <Hero title={"About us"} subTitle={"Who and what we are"} noAction />
+            <Hero title={"About us"} subTitle={"Who and what we are"} imageUrl={heroImg} noAction />
 
             <section className="aboutInfoBig">
                 <h1>
@@ -87,6 +91,7 @@ export default function About() {
 
             <Hero
                 title={"Don’t just think, just do it."}
+                imageUrl={heroImg2}
                 altText={"Contact Us"}
                 text={"Cras tincidunt ligula ac enim posuere venenatis. In luctus biben dum nisl, in luctus dolor ultrices volutpat."}
             />

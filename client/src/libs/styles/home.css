@@ -3,8 +3,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: url(../images/main/IMG_2855.jpg);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: white;
 
     .heroWrap {
+        position: relative;
+        z-index: 2;
         margin-top: 60px;
         display: flex;
         flex-direction: column;
@@ -21,8 +28,22 @@
     }
 }
 
+.hero::before {
+    content: '';
+    /* Required to display the pseudo-element */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent overlay */
+    z-index: 1;
+    /* Ensure it’s behind the text */
+}
 
 .about {
+    margin-top: 70px;
     .aboutWrap {
         display: flex;
         align-items: center;
@@ -43,6 +64,9 @@
         .aboutImg {
             height: 90vh;
             width: 600px;
+            background: url(../images/main/IMG_3046.jpg);
+            background-size: cover;
+            background-position: center;
         }
     }
 }
@@ -114,7 +138,7 @@
             border-top: 8px solid var(--color-main);
             background: #113858;
             color: var(--color-main);
-           height: fit-content;
+            height: fit-content;
 
             .pTextHead {
                 text-align: center;
@@ -123,12 +147,13 @@
                 p {
                     padding: 10px 0px 20px;
                 }
-                .amount{
+
+                .amount {
                     text-decoration: underline;
                 }
             }
 
-            button{
+            button {
                 margin-top: 30px;
             }
         }
@@ -162,7 +187,8 @@
 
 .pair {
     margin-top: 150px;
-    .bonm{
+
+    .bonm {
         margin-bottom: 30px;
     }
 
@@ -258,12 +284,16 @@
 
     .newsInput {
         margin-top: 30px;
-        
-    } 
+
+    }
 }
-.newWall{
+
+.newWall {
     padding-top: 80px;
     height: 80vh;
+    background: url(../images/main/IMG_3516.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
 .inputN {
@@ -273,6 +303,7 @@
     width: fit-content;
     border-radius: 10px;
     overflow: hidden;
+
     input {
         /* height: 43px; */
         font-size: 1rem;
@@ -284,13 +315,20 @@
 }
 
 
-@media screen and (max-width: 700px){
+.pairImg{
+    background: url(../images/main/IMG_3302.jpg);
+    background-size: cover;
+    background-position: bottom;
+}
+
+
+@media screen and (max-width: 700px) {
     .hero {
         height: 100dvh;
         display: flex;
         align-items: center;
         justify-content: center;
-    
+
         .heroWrap {
             margin-top: 60px;
             display: flex;
@@ -298,9 +336,9 @@
             align-items: center;
             gap: 10px;
             text-align: center;
-    
-    
-    
+
+
+
             .heroAction {
                 margin-top: 10px;
                 display: flex;
@@ -316,22 +354,23 @@
             gap: 50px;
             align-items: center;
             justify-content: space-between;
-    
+
             .aboutInfoSec {
                 width: fit-content;
-                
-                h1{
+
+                h1 {
                     padding-top: 40px;
                 }
+
                 p {
                     padding-top: 20px;
                 }
-    
+
                 .aboutAction {
                     padding-top: 20px;
                 }
             }
-    
+
             .aboutImg {
                 height: 70vh;
                 width: 100%;
@@ -341,13 +380,13 @@
 
     .featured {
         margin-top: 150px;
-    
+
         .feaTop {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-    
+
         .cardWrap {
             margin-top: 60px;
             display: flex;
@@ -363,7 +402,7 @@
         flex-direction: column;
         align-items: center;
 
-        h1{
+        h1 {
             margin-top: 30px;
             text-align: center;
         }
@@ -374,8 +413,8 @@
         padding-top: 50px;
         padding-bottom: 50px;
         background: #92CD0C1A;
-    
-    
+
+
         .prices {
             padding: 0 0px;
             margin-top: 40px;
@@ -383,45 +422,46 @@
             flex-direction: column;
             justify-content: space-between;
             gap: 38px;
-    
+
             .priceBox {
                 padding: 30px;
                 border-top: 8px solid var(--color-main);
                 background: #113858;
                 color: var(--color-main);
-               height: fit-content;
-    
+                height: fit-content;
+
                 .pTextHead {
                     text-align: center;
                     padding: 0 0 30px;
-    
+
                     p {
                         padding: 10px 0px 20px;
                     }
-                    .amount{
+
+                    .amount {
                         text-decoration: underline;
                     }
                 }
-    
-                button{
+
+                button {
                     margin-top: 30px;
                 }
             }
-    
+
             .pList {
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
-    
+
                 li {
                     list-style: disc;
                 }
             }
-    
+
             .priceBox:nth-child(1) {
                 margin-top: 0px;
             }
-    
+
             .priceBox:nth-child(3) {
                 margin-top: 0px;
             }
@@ -430,33 +470,34 @@
 
     .pair {
         margin-top: 150px;
-        .bonm{
+
+        .bonm {
             margin-bottom: 30px;
         }
-    
+
         .aboutWrap {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-    
+
             .aboutInfoSecPrice {
                 width: fit-content;
 
-                h1{
-                margin-top: 30px;
+                h1 {
+                    margin-top: 30px;
 
                 }
-    
+
                 p {
                     padding-top: 20px;
                 }
-    
+
                 .aboutAction {
                     padding-top: 20px;
                 }
             }
-    
+
             .aboutImg {
                 margin-top: 50px;
                 height: 60vh;
@@ -472,44 +513,44 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-    
+
         .testInfo {
-    
+
             height: 100%;
-    
+
             .person {
                 padding: 30px 0 0;
-    
+
                 h4 {
                     margin-bottom: 10px;
                 }
             }
         }
-    
+
         .aboutAction {
             display: flex;
             gap: 15px;
             align-items: center;
             justify-content: center;
-    
+
             .tesAction {
                 height: 30px;
                 width: 30px;
                 background: var(--color-blue);
                 border-radius: 100px;
             }
-    
+
             .tesDots {
                 display: flex;
                 gap: 10px;
-    
+
                 .aDot {
                     height: 14px;
                     width: 14px;
                     background: rgba(128, 128, 128, 0.381);
                     border-radius: 100px;
                 }
-    
+
                 .active {
                     background: var(--color-blue);
                 }
@@ -518,10 +559,11 @@
     }
 
     .inputN {
-        button{
+        button {
             width: 100%;
             border-radius: 0 0 10px 10px;
         }
+
         input {
             /* height: 43px; */
             font-size: 1rem;

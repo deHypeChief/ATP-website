@@ -1,11 +1,13 @@
 import Card from "../components/card/card";
 import Hero from "../components/hero/hero";
 import "../libs/styles/coaching.css"
+import img from "../libs/images/main/IMG_3302.jpg";
+
 
 export default function Coaching() {
     return (
         <>
-            <Hero title={"Student-Teacher Pairing System"} subTitle={"GET trained by the best of the best"} />
+            <Hero title={"Student-Teacher Pairing System"} subTitle={"GET trained by the best of the best"} imageUrl={img}/>
 
             <section className="upcomings">
                 <div className="upComs">

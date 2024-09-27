@@ -2,6 +2,8 @@ import Button from "../components/button/button";
 import Hero from "../components/hero/hero";
 import VideoCard from "../components/videoCard/videoCard";
 import "../libs/styles/videos.css"
+import img from "../libs/images/main/IMG_3243.jpg";
+
 
 export default function Videos() {
     const tags = [
@@ -14,7 +16,7 @@ export default function Videos() {
     ]
     return (
         <>
-            <Hero title="Video Library (Instructional Content)" subTitle={"Practice at your convinience"} />
+            <Hero title="Video Library (Instructional Content)" subTitle={"Practice at your convinience"} imageUrl={img}/>
 
             <section className="upcomings">
                 <div className="upComs">
@@ -40,6 +42,8 @@ export default function Videos() {
                 </div>
 
                 <div className="vbo">
+                    <VideoCard name="How to hit a proper back hand"/>
+                    <VideoCard name="How to hit a proper back hand"/>
                     <VideoCard name="How to hit a proper back hand"/>
                 </div>
             </section>
