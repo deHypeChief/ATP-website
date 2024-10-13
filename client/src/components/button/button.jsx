@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react"
 import './style.css'
 
-export default function Button({alt, full, blue, green, children}){
+export default function Button({alt, full, blue, green, disabled, children, onClick}){
     const buttonRef = useRef()
     useEffect(()=>{
         if(alt && buttonRef.current){
@@ -17,8 +17,14 @@ export default function Button({alt, full, blue, green, children}){
         if(green && buttonRef.current){
             buttonRef.current.classList.add("green")
         }
-    }, [alt, blue, full, green])
+        if(disabled && buttonRef.current){
+            buttonRef.current.classList.add("disabled")
+        }
+        if(!disabled && buttonRef.current){
+            buttonRef.current.classList.remove("disabled")
+        }
+    }, [alt, blue, full, green, disabled])
     return(
-        <button ref={buttonRef}>{children}</button>
+        <button disabled={disabled} ref={buttonRef} onClick={onClick}>{children}</button>
     )
 }

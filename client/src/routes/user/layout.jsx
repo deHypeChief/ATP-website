@@ -1,14 +1,26 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Button from "../../components/button/button";
 import logo from "../../libs/images/logoColor.svg"
 import "../../libs/styles/userLayout.css"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../libs/hooks/use-auth"
+
 
 export default function DashboardLayout() {
     useEffect(() => {
         document.getElementsByTagName("nav")[0].style.display = "none"
         document.getElementsByTagName("footer")[0].style.display = "none"
     }, [])
+    const navigate = useNavigate()
+    const { isAuthenticated, userLogout, user } = useAuth()
+    console.log(user())
+
+    useEffect(() => {
+        if (!isAuthenticated()) {
+            navigate("/login")
+        }
+    }, [isAuthenticated, navigate])
     return (
         <div className="useNov">
             <div className="dashTopNav">
@@ -16,10 +28,12 @@ export default function DashboardLayout() {
                     <div className="logoc">
                         <img src={logo} alt="" />
                     </div>
-                    <h2>Hello, Idoma Prince. 04:43 pm</h2>
+                    {/* <h2>Hello, {user()?.fullName}.</h2> */}
                 </div>
                 <div className="navAction">
-                    <Button>Logout</Button>
+                    <Link to={"/login"} onClick={userLogout}>
+                        <Button >Logout</Button>
+                    </Link>
                 </div>
             </div>
             <Outlet />

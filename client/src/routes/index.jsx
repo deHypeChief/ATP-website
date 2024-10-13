@@ -8,6 +8,9 @@ import Hero from "../components/hero/hero"
 
 
 export default function Home() {
+    // const tours = useQuery({
+    //     queryKey: []
+    // })
     return (
         <>
             <Hero title={"Join a Community of Passionate Players"} subTitle={"Elevate Your Game"} text={"Find your perfect match, learn from experts, and compete in thrilling tournaments."} imageUrl={heroImg}/>

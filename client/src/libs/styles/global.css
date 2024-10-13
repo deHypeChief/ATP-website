@@ -52,7 +52,7 @@ h4{
 }
 
 a {
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 1%;
     text-decoration: none;
     color: black;
@@ -72,7 +72,9 @@ img {
 section {
     padding: var(--set-spacing);
 }
-
+.disabled{
+    opacity: .5;
+}
 
 @media screen and (max-width: 700px){
     

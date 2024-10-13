@@ -1,6 +1,7 @@
 import Button from "../button/button";
 import "./style.css"
 import line from "../../libs/images/Line.png"
+import {Link} from "react-router-dom"
 
 export default function Hero({ title, subTitle, text, noAction, altText, imageUrl, pos }) {
     return (
@@ -33,7 +34,9 @@ export default function Hero({ title, subTitle, text, noAction, altText, imageUr
                 {
                     noAction ? null : (
                         <div className="heroAction">
-                            <Button>Get Started</Button>
+                            <Link to="/signup">
+                                <Button>Get Started</Button>
+                            </Link>
                             <Button alt>{altText ? altText : "Learn More"}</Button>
                         </div>
                     )
