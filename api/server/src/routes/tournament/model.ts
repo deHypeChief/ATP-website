@@ -6,6 +6,7 @@ interface ITour extends Document{
     category: string;
     location: string;
     date: Date;
+    time: string;
     tournamentImgURL: string;
     price: string;
 }
@@ -15,6 +16,7 @@ const tourSchema = new mongoose.Schema<ITour>({
   category: { type: String, required: true },
   location: { type: String, required: true },
   date: { type: Date, required: true },
+  time: { type: String, default: "9:00 AM"},
   tournamentImgURL: { type: String, required: true },
   price: { type: String, required: true },
 })

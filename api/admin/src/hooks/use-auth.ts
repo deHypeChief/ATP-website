@@ -1,4 +1,4 @@
-import { login, register } from "@/apis/auth";
+import { login, register, verify } from "@/apis/auth";
 
 export const useAuth = () => {
     async function adminLogout() {
@@ -11,22 +11,60 @@ export const useAuth = () => {
     };
 
     async function adminLogin(payload: { adminEmail: string; pin: string }) {
-        const data = await login(payload);
-        localStorage.setItem('admin-payload', JSON.stringify(data.data.data));
-        return data.data
+        try {
+            const data = await login(payload);
+            localStorage.setItem('admin-payload', JSON.stringify(data.data.data));
+            return data.data
+        } catch (err) {
+            console.log(err)
+        }
     };
 
-    function isAuthenticated() {
-        const isAuth = localStorage.getItem('admin-payload')
-        return isAuth
+    async function isAuthenticated() {
+        const storedPayload = localStorage.getItem('admin-payload');
+
+        if (!storedPayload) {
+            return false;
+        }
+        try {
+            const data = await verify({ token: await JSON.parse(storedPayload)?.auth.token })
+            if (data.isValid) {
+                return JSON.parse(storedPayload);
+            } else {
+                await adminLogout();
+                return false;
+            }
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            await adminLogout(); 
+            return false;
+        }
     }
 
-    function admin(){
-        const isAuth = JSON.parse(localStorage.getItem('admin-payload')?.toString() as string)
-        return isAuth.admin
+    function admin() {
+        const storedPayload = localStorage.getItem('admin-payload');
+
+        if (!storedPayload) {
+            adminLogout();
+            return null;
+        }
+
+        try {
+            const isAuth = JSON.parse(storedPayload);
+            if (!isAuth?.admin) {
+                adminLogout();
+                return null;
+            }
+            return isAuth.admin; // Return admin details if authenticated
+        } catch (error) {
+            console.error("Error parsing admin payload:", error);
+            adminLogout();
+            return null;
+        }
     }
 
-    return { isAuthenticated, adminLogout, adminLogin, adminRegister, admin};
+
+    return { isAuthenticated, adminLogout, adminLogin, adminRegister, admin };
 };
 
 export type AuthContext = ReturnType<typeof useAuth>;

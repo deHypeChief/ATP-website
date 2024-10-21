@@ -93,8 +93,6 @@ export function MatchTable<TData, TValue>({
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
     const [sorting, setSorting] = useState<SortingState>([])
-    // const [file, setFile] = useState<File | null>(null);
-    // const [loading, setLoading] = useState(false)
 
 
     const table = useReactTable({
@@ -116,36 +114,6 @@ export function MatchTable<TData, TValue>({
         },
     })
 
-    // Zod Schema for Validation
-    // const FormSchema = z.object({
-    //     name: z.string().min(5, {
-    //         message: "Tour title must be at least 5 characters.",
-    //     }),
-    //     category: z.string({
-    //         required_error: "Add a category ",
-    //     }),
-    //     location: z.string({
-    //         required_error: "Add a location",
-    //     }),
-    //     price: z.string({
-    //         required_error: "Add a price",
-    //     }),
-    //     date: z.date({
-    //         required_error: "Add a date",
-    //     }),
-    // });
-
-    // const form = useForm<z.infer<typeof FormSchema>>({
-    //     resolver: zodResolver(FormSchema),
-    //     defaultValues: {
-    //         name: "",
-    //         category: "",
-    //         date: new Date(), // Correctly set default as Date object
-    //         location: "",
-    //         price: ""
-    //     },
-    // });
-
 
     return (
         <div className="data_tableGroup">
@@ -154,9 +122,10 @@ export function MatchTable<TData, TValue>({
                 {/* Input Sort */}
                 <Input
                     placeholder="Filter title..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
+                    value={(table.getColumn("tourTitle")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>{
+                        console.log(table.getColumn("tourTitle"))
+                        table.getColumn("tourTitle")?.setFilterValue(event.target.value)}
                     }
                     className="max-w-sm"
                 />
@@ -194,7 +163,7 @@ export function MatchTable<TData, TValue>({
 
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button variant="outline">Asign Winners</Button>
+                            <Button variant="outline">Assign Winners</Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[400px]">
                             <DialogHeader>

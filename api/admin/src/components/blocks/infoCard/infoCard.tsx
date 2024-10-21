@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function InfoCard({title, info, extraInfo, children}:{
     title: string;
-    info: string;
+    info: string | number;
     extraInfo: string;
     children: ReactNode;
 }) {

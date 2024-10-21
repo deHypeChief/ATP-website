@@ -13,13 +13,20 @@ export default function DashboardLayout() {
         document.getElementsByTagName("footer")[0].style.display = "none"
     }, [])
     const navigate = useNavigate()
-    const { isAuthenticated, userLogout, user } = useAuth()
-    console.log(user())
+    const { isAuthenticated, userLogout } = useAuth()
+
 
     useEffect(() => {
-        if (!isAuthenticated()) {
-            navigate("/login")
+        async function checkAuth() {
+            const auth = await isAuthenticated()
+
+            console.log(auth)
+
+            if (!auth) {
+                navigate("/login")
+            }
         }
+        checkAuth()
     }, [isAuthenticated, navigate])
     return (
         <div className="useNov">
@@ -31,7 +38,11 @@ export default function DashboardLayout() {
                     {/* <h2>Hello, {user()?.fullName}.</h2> */}
                 </div>
                 <div className="navAction">
-                    <Link to={"/login"} onClick={userLogout}>
+                    <Link to={"/login"} onClick={() => {
+                        userLogout()
+                        document.getElementsByTagName("nav")[0].style.display = "block"
+                        document.getElementsByTagName("footer")[0].style.display = "block"
+                    }}>
                         <Button >Logout</Button>
                     </Link>
                 </div>

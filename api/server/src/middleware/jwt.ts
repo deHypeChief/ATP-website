@@ -7,7 +7,7 @@ export const jwtAdmin = new Elysia({
     jwt({
         name: "adminJwt",
         secret: Bun.env.ADMIN_JWT as string,
-        exp: "7d",
+        exp: "1d",
     })
 );
 

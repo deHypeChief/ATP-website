@@ -46,5 +46,39 @@ const signUser = new Elysia()
     }, {
         body: "loginSchema"
     })
+    .post('/verify', async ({ set, body, userJwt }) => {
+        const { token } = body;
+
+        if (!token) {
+            set.status = 400; // Bad Request
+            return { message: "Token is required" };
+        }
+
+        try {
+            // Verify the token using the secret key
+            const decoded = userJwt.verify(token);
+
+            if (!decoded) {
+                set.status = 401
+                return {
+                    isValid: false,
+                    message: "Invalid or expired token",
+                    user: decoded, // Optionally return decoded admin data
+                };
+            }
+
+            set.status = 200;
+            return {
+                isValid: true,
+                user: decoded, // Optionally return decoded admin data
+            };
+        } catch (error) {
+            set.status = 401; // Unauthorized
+            return {
+                isValid: false,
+                message: "Invalid or expired token",
+            };
+        }
+    });
 
 export default signUser

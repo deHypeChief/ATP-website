@@ -16,3 +16,11 @@ export const register = async (payload: {
   const response = await api.post('/admin/createAdmin', payload);
   return response.data;
 };
+
+
+export const verify = async (payload: {
+  token: string;
+}) => {
+  const response = await api.post('/admin/verify', payload);
+  return response.data;
+}

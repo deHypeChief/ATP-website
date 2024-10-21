@@ -113,7 +113,7 @@ export default function Navbar() {
                     setOpen(!open)
                     // setTriggered(!triggered);
                 }}>
-                    <Icon icon="gg:menu" width="40px" height="40px" style={{ color: triggered ? "black" : "white" }} />
+                    <Icon icon="gg:menu" width="40px" height="40px" style={{ color: "black"}} />
                 </div>
             </div>
             {

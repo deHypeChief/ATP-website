@@ -10,10 +10,11 @@ import user from "./routes/user/plugin";
 import video from "./routes/video/plugin";
 import tour from "./routes/tournament/plugin";
 import match from "./routes/match/plugin";
+import coach from "./routes/coach/plugin";
+import notify from "./routes/notifications/plugin";
 
 // Connect to the database
 connectDb();
-// Initialize the Elysia app with a prefix for all routes
 export const app = new Elysia();
 
 // Apply middlewares and plugins
@@ -28,17 +29,12 @@ app
   .use(video)
   .use(tour)
   .use(match)
+  .use(coach)
+  .use(notify)
   .get("/", () => "Server is Up and running 🦊")
-  .onError((error) => {
-    console.error("Error occurred:", error);
-    return {
-      status: 500,
-      message: "Internal Server Error. Please try again later.",
-    };
-  })
   .listen(Bun.env.PORT || 3002);
 
-// Log server startup details
+
 console.log(
   `🦊 Elysia is running at ` +
   pc.yellow(`${app.server?.hostname}:${app.server?.port}`)

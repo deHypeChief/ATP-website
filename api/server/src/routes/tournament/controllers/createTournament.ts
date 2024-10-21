@@ -1,6 +1,4 @@
 import Elysia from "elysia";
-import cloudinaryClient from "../../../config/cloudinary.config";
-import Coach from "../model";
 import Tournament from "../model";
 import { isAdmin_Authenticated } from "../../../middleware/isAdminAuth";
 
@@ -12,6 +10,7 @@ const createTour = new Elysia()
             category,
             location,
             date,
+            time,
             tournamentImgURL,
             price
         } = body;
@@ -30,6 +29,7 @@ const createTour = new Elysia()
                 category,
                 location,
                 date,
+                time,
                 tournamentImgURL,
                 price
             });
@@ -46,7 +46,7 @@ const createTour = new Elysia()
             set.status = 500
             return {
                 status: 500,
-                message: 'An error occurred while uploading the video.'
+                message: 'An error occurred while uploading the tournament.'
             };
         }
     })

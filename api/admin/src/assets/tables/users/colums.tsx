@@ -2,17 +2,16 @@ import { ColumnDef } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "../components/tableHeader"
 import { Checkbox } from "@/components/ui/checkbox"
 
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { FormLabel } from "@/components/ui/form"
 
 export type Users = {
   _id: string
@@ -20,7 +19,8 @@ export type Users = {
   username: string
   level: string
   phoneNumber: string
-  membership:string
+  membership: string
+  fullName: string
 }
 
 export const columns: ColumnDef<Users>[] = [
@@ -67,45 +67,70 @@ export const columns: ColumnDef<Users>[] = [
   {
     accessorKey: "membership",
     header: "Membership",
-    cell: ({row})=>{
+    cell: ({ row }) => {
       const user = row.original
-      return(
+      return (
         <>
           {
-            user.membership == "" ? "--" : user.membership 
+            user.membership == "" ? "--" : user.membership
           }
         </>
       )
     }
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const user = row.original
-  //     console.log(user)
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const user = row.original
+      console.log(user)
 
-  //     return (
-  //       <div className="dropRight float-right">
-  //         <DropdownMenu>
-  //           <DropdownMenuTrigger asChild>
-  //             <Button variant="ghost" className="h-8 w-8 p-0">
-  //               <span className="sr-only">Open menu</span>
-  //               <MoreHorizontal className="h-4 w-4" />
-  //             </Button>
-  //           </DropdownMenuTrigger>
-  //           <DropdownMenuContent align="end">
-  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //             <DropdownMenuItem
-  //               onClick={() => navigator.clipboard.writeText(user._id)}
-  //             >
-  //               Copy user ID
-  //             </DropdownMenuItem>
-  //             <DropdownMenuSeparator />
-  //             <DropdownMenuItem>View User</DropdownMenuItem>
-  //           </DropdownMenuContent>
-  //         </DropdownMenu>
-  //       </div>
-  //     )
-  //   },
-  // },
+      return (
+        <div className="dropRight float-right">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="default">
+                View Profile
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[375px]">
+              <DialogHeader>
+                <DialogTitle>{user.fullName}</DialogTitle>
+                <DialogDescription>
+                  An overview of {user.fullName.split(" ")[0]}'s profile
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="profileContent">
+                <div className="userImage">
+
+                </div>
+
+                <div className="profileContentList">
+                  <div className="spacWrap">
+                    <div className="proInfo">
+                      <p className="pLabel">Email</p>
+                      <p>{user.email}</p>
+                    </div>
+                    <div className="proInfo">
+                      <p className="pLabel">Username</p>
+                      <p>{user.username}</p>
+                    </div>
+                  </div>
+                  <div className="proInfo">
+                    <p className="pLabel">Phone Number</p>
+                    <p>{user.phoneNumber}</p>
+                  </div>
+                  <div className="proInfo">
+                    <p className="pLabel">Level</p>
+                    <p>{user.level}</p>
+                  </div>
+                </div>
+              </div>
+
+            </DialogContent>
+          </Dialog>
+        </div>
+      )
+    },
+  },
 ]

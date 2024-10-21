@@ -1,10 +1,13 @@
 import Elysia from "elysia";
 import User from "../model";
 import { userSchemas } from "../setup";
+import Notify from "../../notifications/model";
+import { sendMail } from "../../../middleware/sendMail";
 
 const createUser = new Elysia()
     .use(userSchemas)
-    .post("/createUser", async ({ set, body }) => {
+    .use(sendMail)
+    .post("/createUser", async ({ set, body, mailConfig, generateAtpEmail }) => {
         const {
             fullName,
             username,
@@ -39,6 +42,31 @@ const createUser = new Elysia()
                 membership: "",
             });
             await user.save();
+            await Notify.create({
+                userID: user._id,
+                title: "New account created",
+                message: `Welcome to ATP, ${fullName}`,
+                type: "info"
+            });
+            mailConfig(
+                email,
+                `Hello welcome to ATP`,
+                generateAtpEmail({
+                    title: 'Welcome to ATP',
+                    content: `
+                        <div class="content">
+                            <h2>Stay Updated on All Things Tennis</h2>
+                            <p>Hi ${fullName},</p>
+                            <p>We're thrilled to have you on board. Get ready to stay updated with the latest in tennis, exclusive content, match updates, and more!</p>
+                            <br/>
+                            <p>Dive into your account to setup your profile</p>
+
+                            <!-- Blue Button -->
+                            <p>Thank you for joining the ATP family. We're excited to serve you with the best tennis content out there.</p>
+                        </div>
+                    `
+                })
+            )
 
             set.status = 201;
             return {
@@ -61,7 +89,8 @@ const createUser = new Elysia()
             };
         } catch (err) {
             console.log(err);
-            return {message: "Error while creating user"}
+            set.status = 500
+            return { message: "Error while creating user" }
         }
 
     }, {

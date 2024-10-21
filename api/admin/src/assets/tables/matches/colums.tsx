@@ -1,48 +1,77 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "../components/tableHeader"
-import { Checkbox } from "@/components/ui/checkbox"
-
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
 
 export type Tour = {
-  tourTitle: string
-  username: string
-  tourCheck: string
-  paid: string
-  medal: string
+	flutterPaymentId: string
+	tournament: {
+		name: string
+	}
+	user: {
+		fullName: string
+	}
+	tourTitle: string
+	tourCheck: string
+	paid: string
+	medal: string
+	token: string
 }
 
 export const columns: ColumnDef<Tour>[] = [
-  {
-    accessorKey: "tourTitle",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tour Title" />
-    ),
-  },
-  {
-    accessorKey: "username",
-    header: "Username",
-  },
-  {
-    accessorKey: "tourCheck",
-    header: "Ticket Checked",
-  },
-  {
-    accessorKey: "paid",
-    header: "Payment Made",
-  },
-  {
-    accessorKey: "medal",
-    header: "Medal",
-  }
+	{
+		id: 'tourTitle',
+		accessorFn: row => row.tournament.name,
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Tour Title" />
+		),
+		cell: ({ row }) => (
+			<>{row.original.tournament.name}</>
+		)
+	},
+	{
+		accessorKey: "user",
+		header: "Full Name",
+		cell: ({ row }) => (
+			<>{row.original.user.fullName}</>
+		)
+	},
+	{
+		accessorKey: "tourCheck",
+		header: () => (
+			<div className="checkP">
+				<div className="tourHeader">
+					Ticket Checked
+				</div>
+			</div>
+		),
+		cell: ({ row }) => (
+			<div className="checkP">
+				<div className="pill">
+					<Badge variant={row.original.tourCheck ? "default" : "destructive"}>
+						{String(row.original.tourCheck)}
+					</Badge>
+				</div>
+			</div>
+		)
+	},
+	{
+		accessorKey: "token",
+		header: "Ticket Token",
+		cell: ({ row }) => (
+			<>{row.original.token}</>
+		)
+	},
+	{
+		accessorKey: "medal",
+		header: "Match Status",
+		cell: ({ row }) => (
+			<>{row.original.medal}</>
+		)
+	},
+	{
+		header: "Action",
+		cell: ({ row }) => (
+			<>{row.original.token}</>
+		)
+	}
 ]

@@ -1,6 +1,7 @@
 import mongoose, { ObjectId } from "mongoose";
 import { Document } from "mongoose";
 
+
 // Extend the Document interface for the Match model
 interface IMatch extends Document {
     tournament: ObjectId; 
@@ -11,6 +12,7 @@ interface IMatch extends Document {
     medal: "gold" | "silver" | "bronze" | "null"; 
     token: string;
 }
+
 
 // Define the match schema
 const matchSchema = new mongoose.Schema<IMatch>({

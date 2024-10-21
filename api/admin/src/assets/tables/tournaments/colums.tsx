@@ -1,18 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "../components/tableHeader"
-import { Checkbox } from "@/components/ui/checkbox"
-
-import { MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 export type Tour = {
   name: string
@@ -41,19 +28,10 @@ export const columns: ColumnDef<Tour>[] = [
   {
     accessorKey: "date",
     header: "Tour Date",
+    cell: ({row})=><>{row.original.date.split("T")[0]}</>
   },
   {
     accessorKey: "price",
-    header: "Tour Price",
-    // cell: ({row})=>{
-    //   const user = row.original
-    //   return(
-    //     <>
-    //       {
-    //         user.membership == "" ? "--" : user.membership 
-    //       }
-    //     </>
-    //   )
-    // }
+    header: "Tour Price"
   }
 ]

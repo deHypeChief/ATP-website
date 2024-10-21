@@ -19,9 +19,16 @@ export function Login() {
     const [error, setError] = useState("")
 
     useEffect(() => {
-        if (isAuthenticated()) {
-            navigate("/u")
+        async function checkAuth() {
+            const auth = await isAuthenticated()
+
+            console.log(auth)
+
+            if (auth) {
+                navigate("/u")
+            }
         }
+        checkAuth()
     }, [isAuthenticated, navigate])
 
     const { mutateAsync: createUserMu, isPending } = useMutation({
@@ -130,11 +137,17 @@ export function SignUp() {
         level: "",
     })
     const [error, setError] = useState("")
-
     useEffect(() => {
-        if (isAuthenticated()) {
-            navigate("/u")
+        async function checkAuth() {
+            const auth = await isAuthenticated()
+
+            console.log(auth)
+
+            if (auth) {
+                navigate("/u")
+            }
         }
+        checkAuth()
     }, [isAuthenticated, navigate])
 
     const { mutateAsync: createUserMu, isPending } = useMutation({

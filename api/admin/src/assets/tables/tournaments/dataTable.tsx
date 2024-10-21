@@ -1,5 +1,4 @@
 "use client"
-
 import {
     ColumnDef,
     flexRender,
@@ -75,7 +74,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import api from "@/lib/axios"
 import axios from "axios"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from '@/hooks/use-toast'
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -97,6 +97,9 @@ export function TourTable<TData, TValue>({
     const [sorting, setSorting] = useState<SortingState>([])
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false)
+	const queryClient = useQueryClient()
+
+
 
 
     const table = useReactTable({
@@ -148,8 +151,24 @@ export function TourTable<TData, TValue>({
         },
     });
 
-    const mutation  = useMutation({
-        mutationFn: handleFile
+    const mutation = useMutation({
+        mutationFn: handleFile,
+        onSuccess: (data) => {
+            console.log(data)
+            toast({
+                variant: "default",
+                title: "Tournament Created",
+            })
+            queryClient.invalidateQueries({ queryKey: ['tour'] })
+        },
+        onError: (err) => {
+            console.error(err)
+            toast({
+                variant: "destructive",
+                title: "Error  creating tournament",
+                description: err.response.data.message,
+            })
+        }
     })
 
     // Handle file input separately from Zod form
@@ -161,7 +180,7 @@ export function TourTable<TData, TValue>({
     };
 
 
-    async function handleFile(data: z.infer<typeof FormSchema>){
+    async function handleFile(data: z.infer<typeof FormSchema>) {
         if (!file) {
             throw new Error("No file selected.");
         }

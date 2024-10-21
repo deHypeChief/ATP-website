@@ -64,3 +64,7 @@
     @apply bg-background text-foreground;
   }
 }
+html{
+  height: 100vh;
+  overflow-y: hidden;
+}

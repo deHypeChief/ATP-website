@@ -49,6 +49,10 @@ function CreateAdmin() {
     mutationFn: adminRegister,
     onSuccess: (data) => {
 		console.log(data)
+    toast({
+      variant: "default",
+      title: "Admin Created",
+    })
 		navigate({to: "/"})
     },
     onError: (err) => {

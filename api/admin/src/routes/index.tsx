@@ -25,8 +25,9 @@ import { useNavigate } from '@tanstack/react-router'
 export const Route = createFileRoute('/')({
      beforeLoad: async ({ context }) => {
         const { isAuthenticated } = context.authentication;
-        if (isAuthenticated()) {
-            throw redirect({ to: '/user' });
+        const auth = await isAuthenticated()
+        if (auth) {
+            throw redirect({ to: '/users' });
         }
     },
     component: () => <Login />,
@@ -37,7 +38,7 @@ const formSchema = z.object({
         message: 'Not a valid email address',
     }),
     pin: z.string().min(6, {
-        message: 'Not a valid pin',
+        message: 'Not a valid pin must be a max of 6 and have a symbol, an upper and a lower case',
     }),
 })
 
@@ -50,7 +51,11 @@ function Login() {
     const { mutateAsync: signAdminMutation, isPending } = useMutation({
         mutationFn: adminLogin,
         onSuccess: () => {
-            navigate({ to: "/user" })
+            navigate({ to: "/users" })
+            toast({
+                variant: "default",
+                title: "Login Valid",
+            })
         },
         onError: (err) => {
             console.error(err)
@@ -129,3 +134,14 @@ function Login() {
         </section>
     )
 }
+
+
+// add pre text => HELP
+// report a problem => admin 
+// sponsip
+
+// mempership page   2kids, 
+
+
+
+// coach bind star assigment(random)

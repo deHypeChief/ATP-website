@@ -37,11 +37,10 @@ function Users() {
           <InfoCard title='Total Losers' info="0" extraInfo='For Current Tournament'>
             <User className="h-4 w-4 text-muted-foreground" />
           </InfoCard>
-
         </div>
 
         <div className="userData">
-          <UserTable data={users?.data?.length ? users.data.reverse() : []} columns={columns}/>
+          <UserTable data={users?.data?.length ? users.data : []} columns={columns}/>
         </div>
       </div>
     </div>

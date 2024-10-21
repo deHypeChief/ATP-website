@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Button from "../../components/button/button";
 import { useAuth } from "../../libs/hooks/use-auth";
 import "../../libs/styles/dashboard.css";
@@ -8,62 +9,128 @@ import raIcon3 from "../../libs/images/Vector.svg";
 import raIcon4 from "../../libs/images/Group.svg";
 
 import { useQuery } from "@tanstack/react-query";
-import { getTour } from "../../libs/api/api.endpoints";
-import { useEffect } from "react";
+import { checkMatch, createMatchTicket, getMatches, getNotify, getTour } from "../../libs/api/api.endpoints";
+import { useEffect, useRef, useState } from "react";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import currency from 'currency.js'
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { QRCodeCanvas } from 'qrcode.react';
+import Chart from 'chart.js/auto'
+
+
+dayjs.extend(relativeTime);
 
 export default function Dashboard() {
     const { user } = useAuth();
-    const [tourPayload, setTourPayload] = useState({
-        name: "",
-        amount: ""
-    })
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const sliderRef = useRef(null);
 
     // Fetch the tournaments data using React Query
-    const { data, isFetched } = useQuery({
+    const { data } = useQuery({
         queryKey: ["tourData"],
         queryFn: () => getTour(),
     });
 
-    useEffect(() => {
-        if (isFetched) {
-            console.log(data); // Logs data when it's fetched
-        }
-    }, [data, isFetched]);
+    const matchMutation = useQuery({
+        queryKey: ["match"],
+        queryFn: () => getMatches()
+    })
 
-    function tourConfig(tourPayload) {
-        return {
-            public_key: "FLWPUBK_TEST-e7c8f332b9d34b01b958cf4f4f643018-X",
-            tx_ref: Date.now(),
-            amount: tourPayload.amount,
-            currency: "NGN",
-            payment_options: "card",
-            customer: {
-                email: user()?.email,
-                phone_number: user()?.phoneNumber,
-                name: user()?.fullName,
+    const notifyMutation = useQuery({
+        queryKey: ["notify"],
+        queryFn: () => getNotify()
+    })
+
+    useEffect(() => {
+        // console.log(notifyMutation.data)
+        const chart = new Chart(
+            document.getElementById('doChart'), {
+            type: 'doughnut',
+            options: {
+                responsive: true,
             },
-            customizations: {
-                title: tourPayload.name,
-                description: "Payment for tournament",
-                logo: "",
+            data: {
+                datasets: [{
+                    label: 'Match Data',
+                    data: [matchMutation?.data?.matchesWon || 0, matchMutation?.data?.matches?.length || 0],
+                    backgroundColor: [
+                        '#92CD0C',
+                        '#113858',
+                    ],
+                    hoverOffset: 4
+                }]
             },
         }
+        );
+        return () => chart.destroy();
+    }, [matchMutation?.data?.matches?.length, matchMutation?.data?.matchesWon])
+
+    const handleNext = () => {
+        if (currentSlide < data.length - 1) {
+            setCurrentSlide(currentSlide + 1);
+        }
+    };
+
+    const handlePrev = () => {
+        if (currentSlide > 0) {
+            setCurrentSlide(currentSlide - 1);
+        }
+    };
+
+    const scrollToSlide = (index) => {
+        const slide = sliderRef.current.children[index];
+        slide?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    };
+
+    useEffect(() => {
+        sliderRef.current.style.gridTemplateColumns = `repeat(${data?.length}, 100%)`
+        scrollToSlide(currentSlide);
+    }, [currentSlide, data?.length]);
+
+    const [type, setType] = useState({
+        type: null,
+        payload: {}
+    });
+
+
+
+    function setTourPayload(payload) {
+        console.log("booming", payload);  // Check if payload has valid data here
+        setType({
+            type: "paymentTour",
+            data: payload,
+            user: user()  // Ensure user() is returning a valid user object
+        });
     }
 
-    const handleFlutterPayment = useFlutterwave(tourConfig());
+    function OpenCoachReview() {
+        setType({
+            type: "OpenCoachReview",
+            data: {}
+        });
+    }
 
     return (
         <section className="borderWrap">
+            {
+                type.type !== null ?
+                    <ActionOverflow payload={type} typeAction={setType} /> :
+                    null
+            }
+
             <div className="profile">
                 <div className="topAct">
                     <div className="actL">
                         <h2>Profile Overview</h2>
-                        <div className="actProf"></div>
+                        <div className="actProf">
+                            <h1>{user()?.fullName.split(" ")[0].split("")[0]}</h1>
+                        </div>
                         <h2 className="spec">Hello, {user()?.fullName}.</h2>
                     </div>
                     <div className="actR">
-                        <Button>Edit Profile</Button>
+                        <Button onClick={OpenCoachReview}>View Coach</Button>
                     </div>
                 </div>
 
@@ -74,11 +141,11 @@ export default function Dashboard() {
                     </div>
                     <div className="infoMo">
                         <p className="nHead">Matches Played</p>
-                        <p>0</p>
+                        <p>{matchMutation?.data?.matches?.length || "--"}</p>
                     </div>
                     <div className="infoMo">
                         <p className="nHead">Membership</p>
-                        <p>{user()?.membership === "" ? "Free" : user().membership}</p>
+                        <p>{user()?.membership === "" ? "Free" : user()?.membership}</p>
                     </div>
                     <div className="infoMo">
                         <p className="nHead">Phone</p>
@@ -86,7 +153,7 @@ export default function Dashboard() {
                     </div>
                     <div className="infoMo">
                         <p className="nHead">Matches Won</p>
-                        <p>0</p>
+                        <p>{matchMutation?.data?.matchesWon || "--"}</p>
                     </div>
                     <div className="infoMo">
                         <p className="nHead">Current Skill Level</p>
@@ -101,7 +168,7 @@ export default function Dashboard() {
                         <p>0</p>
                     </div>
                     <div className="infoMo">
-                        <p className="nHead">Previous Skill Level</p>
+                        <p className="nHead">Assigned Coach</p>
                         <p>--</p>
                     </div>
                 </div>
@@ -109,7 +176,12 @@ export default function Dashboard() {
 
             <div className="track">
                 <h2>Progress Tracker</h2>
-                <div className="trackBox"></div>
+                <div className="trackBox">
+
+                    <canvas id="doChart" className="doChart">
+
+                    </canvas>
+                </div>
                 <div className="sopts">
                     <div className="spbox">
                         <div className="spM"></div>
@@ -117,14 +189,51 @@ export default function Dashboard() {
                     </div>
                     <div className="spbox">
                         <div className="spM spMa"></div>
-                        <p>Matches Played</p>
+                        <p>Matches Won</p>
                     </div>
                 </div>
             </div>
 
             <div className="cals">
                 <h2>Upcoming Tournament</h2>
-                <div className="calBox"></div>
+                <div className="calBox">
+
+                    <button onClick={handlePrev} disabled={currentSlide === 0} className="buttons upL">
+                        <Icon icon="iconamoon:arrow-left-2-duotone" width="20px" height="20px" />
+                    </button>
+                    <button onClick={handleNext} disabled={currentSlide === data?.length - 1} className="buttons upR">
+                        <Icon icon="iconamoon:arrow-right-2-duotone" width="20px" height="20px" />
+                    </button>
+
+                    <div className="cardBoxup" ref={sliderRef}>
+
+                        {
+                            data?.map((item, index) => (
+                                <div key={"m" + index} className="upCard">
+                                    <div className="bigTextUp">
+                                        <h1 className="ipText">
+                                            {item.date.split("T")[0].split("-")[2]}
+                                        </h1>
+                                    </div>
+                                    <h2 className="tourTitleUp">
+                                        {item.name}
+                                    </h2>
+                                    <div className="baseupinfo">
+                                        <div className="datPill">
+                                            <p>Oct 2024</p>
+                                        </div>
+                                        <div className="datPill">
+                                            <img src={raIcon3} alt="" />
+                                            <p>{item.location}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        }
+
+                    </div>
+
+                </div>
                 <div className="torns">
                     {/* Conditionally render tournaments */}
                     {data?.length > 0 ? (
@@ -136,12 +245,11 @@ export default function Dashboard() {
                                     </div>
                                     <p>{item.name}</p>
                                 </div>
-                                {/* Placeholder for additional data */}
                                 <div className="bonVor">
                                     <div className="bonboxN">
                                         <img src={raIcon4} alt="" />
                                     </div>
-                                    <p>{item.name} </p>
+                                    <p>{item.date.split("T")[0]}</p>
                                 </div>
                                 <div className="bonVor">
                                     <div className="bonboxN">
@@ -157,7 +265,7 @@ export default function Dashboard() {
                                 </div>
 
                                 <div className="comAction">
-                                    <Button full alt blue>
+                                    <Button full alt blue onClick={() => setTourPayload(item)}>
                                         Register Now
                                     </Button>
                                 </div>
@@ -175,43 +283,358 @@ export default function Dashboard() {
             <div className="notify">
                 <div className="topNo">
                     <h2>Notifications</h2>
-                    <p>See All</p>
+                    {/* <p>See All</p> */}
                 </div>
                 <div className="notiList">
                     {/* Notification example */}
-                    <div className="notiBox">
-                        <p>
-                            You a have been successfully upgraded to the VIP plan for ATP. Check
-                            your email to get more details
-                        </p>
-                        <div className="comP">
-                            <p className="notiBo">Monday 15th, 2024. 04:43pm</p>
-                            <p className="notiBo">3hrs ago</p>
-                        </div>
-                    </div>
-                    {/* Duplicate notifications */}
+                    {
+                        notifyMutation.data ? (
+                            notifyMutation.data.map((item, index) => {
+                                return (
+                                    <div className="notiBox" key={"notify" + index}>
+                                        <p>
+                                            {item.message}.
+                                        </p>
+                                        <div className="comP">
+                                            <p className="notiBo">{dayjs(item.createdAt).format('D MMMM, YYYY')}.</p>
+                                            <p className="notiBo">{dayjs(item.createdAt).fromNow()}</p>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        ) : "No notification found"
+                    }
                 </div>
             </div>
         </section>
     );
 }
 
+export function ActionOverflow({ typeAction, payload }) {
 
+    function resetType() {
+        typeAction({
+            type: null,
+            payload: {}
+        });
+    }
 
-export function actionOverflow(type, payload){
-    return(
+    return (
         <div className="overlayPage">
-            {
-                type == "payment" ? 
+            <div className="overWrap">
+                <div className="absClose">
+                    <div className="closeIcon" onClick={resetType}>
+                        <Icon icon="si:close-duotone" width="40px" height="40px" />
+                    </div>
+                </div>
+                {
+                    payload.type === "paymentTour"
+                        ? <SelectedTourPayPage payload={payload} action={typeAction} />
+                        : payload.type === "ticket"
+                            ? <Ticket payload={payload} />
+                            : payload.type === "OpenCoachReview"
+                                ? <ViewCoach />
+                                : null
+                }
+            </div>
+        </div>
+    );
+}
 
-                : null
+
+
+export function SelectedTourPayPage({ payload, action }) {
+    const { user, data } = payload;
+    const [open, setOpen] = useState(true)
+
+
+    const paymentConfig = {
+        public_key: "FLWPUBK_TEST-030dd3b04793ce669f779a5c4a5cb5bc-X",
+        tx_ref: Date.now(),
+        amount: Number(data?.price), // You can dynamically set this later
+        currency: "NGN",
+        payment_options: "card",
+        customer: {
+            email: user.email,
+            phone_number: user.phoneNumber,
+            name: user.fullName,
+        },
+        customizations: {
+            title: Number(data.name),
+            description: "Payment for tournament",
+        },
+    };
+
+
+    useEffect(() => {
+        checkMatch({
+            tournament: data._id,
+            user: user._id,
+        }).then((response) => {
+            console.log(response);
+            setOpen(true)
+            if (response.match) {
+                action({
+                    type: "ticket",
+                    payload: response
+                })
+            } else {
+                setOpen(false)
             }
+
+        }).catch((error) => {
+            console.error(error);
+        }).finally(() => {
+        })
+    }, []);
+
+
+
+    const handleFlutterPayment = useFlutterwave(paymentConfig);
+
+    return (
+        <div className="tourCenter">
+            <div className="tourImage">
+                <img src={data.tournamentImgURL} alt="" />
+                {/* Add tournament image here */}
+            </div>
+            <div className="tourText">
+                <p>
+                    You about to register for {data.name}
+                </p>
+
+                <p className="regInfo">
+                    What you need to know:
+                </p>
+                <p className="regPoints">Price: {currency(Number(data?.price), { symbol: "₦", precision: 2 }).format()}</p>
+                <p className="regPoints">Date: {dayjs(data.date).format('D MMMM, YYYY')}</p>
+            </div>
+            <div className="tourAction">
+                <Button disabled={open} full onClick={() => handleFlutterPayment({
+                    callback: (response) => {
+                        setOpen(true)
+
+                        console.log(response); // Payment callback response
+                        createMatchTicket({
+                            tournament: data._id,
+                            userID: user._id,
+                            flutterPaymentId: response.transaction_id
+                        }).then((response) => {
+                            console.log(response)
+                            if (response.match) {
+                                action({
+                                    type: "ticket",
+                                    payload: response
+                                })
+                            }
+                        })
+                        closePaymentModal(); // Close modal after payment
+                    },
+                    onClose: () => {
+                        console.log('Payment closed');
+                    }
+                })}>
+                    Make Payment
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+
+
+function Ticket(payload) {
+    const { token, user, tournament } = payload.payload.payload.match
+    useEffect(() => {
+        console.log(payload.payload.payload.match)
+    }, [])
+    return (
+        <div className="tourCenter">
+            <div className="tourImage Bn">
+                <div className="qrCode">
+                    <QRCodeCanvas value={{
+                        token: token,
+                        name: user.fullName,
+                        email: user.email,
+                        tourName: tournament.name,
+                        tourId: tournament._id
+                    }} size={200} level={"H"} includeMargin={true} />
+                </div>
+                {/* Add tournament image here */}
+            </div>
+            <div className="tourText">
+
+                <h2 className="cetText">{token}</h2>
+
+                <p>
+                    You have succesfully registered for the <span className="tourtextMain">{tournament.name}</span>
+                </p>
+
+                <p className="regInfo">
+                    What you need to know:
+                </p>
+                <p className="regPoints">Name: {user.fullName}</p>
+                <p className="regPoints">Date: {dayjs(tournament.date).format('D MMMM, YYYY')}</p>
+                <p className="regPoints">Venue: {tournament.location} </p>
+            </div>
+            <div className="tourAction">
+                <Button full>
+                    Download Ticket
+                </Button>
+            </div>
         </div>
     )
 }
 
-export function tourPayPage(){
-    return(
-        
+function ViewCoach() {
+    const [commet, setComment] = useState({
+        type: null,
+        data: {}
+    })
+
+    function openComment() {
+        setComment(
+            {
+                type: "connectSec",
+                data: {}
+            }
+        )
+    }
+    return (
+        <>
+            <div className="coachBox">
+                <div className="caochImg">
+
+                </div>
+                <div className="coachInfo">
+                    {
+                        commet.type === null ? (
+                            <>
+                                <div className="coachText">
+                                    <h3>Coach Name</h3>
+                                    <p>Coach info and what they do, like crazy thinghs</p>
+
+                                    <div className="boxStar">
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                    </div>
+
+                                    <Button onClick={openComment}>Drop a review</Button>
+                                </div>
+                                <div className="comentList">
+                                    <h2>Reviews: </h2>
+
+                                    <div className="commentBoxWrap">
+
+                                        <div className="commentBox">
+                                            <div className="profileBox">
+                                                <div className="imgBoxP"></div>
+                                            </div>
+
+                                            <div className="contText">
+                                                <div className="starSec">
+                                                    <p>David Okoye</p>
+                                                    <div className="sec">
+                                                        <p>5</p>
+                                                        <div className="starBox"></div>
+                                                    </div>
+                                                </div>
+                                                <p>Comment text info</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="commentBox">
+                                            <div className="profileBox">
+                                                <div className="imgBoxP"></div>
+                                            </div>
+
+                                            <div className="contText">
+                                                <div className="starSec">
+                                                    <p>David Okoye</p>
+                                                    <div className="sec">
+                                                        <p>5</p>
+                                                        <div className="starBox"></div>
+                                                    </div>
+                                                </div>
+                                                <p>Comment text info</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="commentBox">
+                                            <div className="profileBox">
+                                                <div className="imgBoxP"></div>
+                                            </div>
+
+                                            <div className="contText">
+                                                <div className="starSec">
+                                                    <p>David Okoye</p>
+                                                    <div className="sec">
+                                                        <p>5</p>
+                                                        <div className="starBox"></div>
+                                                    </div>
+                                                </div>
+                                                <p>Comment text info</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="commentBox">
+                                            <div className="profileBox">
+                                                <div className="imgBoxP"></div>
+                                            </div>
+
+                                            <div className="contText">
+                                                <div className="starSec">
+                                                    <p>David Okoye</p>
+                                                    <div className="sec">
+                                                        <p>5</p>
+                                                        <div className="starBox"></div>
+                                                    </div>
+                                                </div>
+                                                <p>Comment text info</p>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="coachText">
+                                    <h3>Post a Review</h3>
+                                    <p>Post your review on your assigned coach</p>
+
+                                    <div className="boxStar">
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                        <div className="starBox"></div>
+                                    </div>
+
+                                    <form action="">
+                                        <textarea className="textAreaReview" placeholder="Write your comment here" name="" id=""></textarea>
+                                        <div className="reviewBttn">
+                                            <Button alt blue onClick={() => {
+                                                setComment(
+                                                    {
+                                                        type: null,
+                                                        data: {}
+                                                    }
+                                                )
+                                            }}>Back</Button>
+                                            <Button>Drop a review</Button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </>
+                        )
+                    }
+                </div>
+            </div>
+        </>
     )
 }

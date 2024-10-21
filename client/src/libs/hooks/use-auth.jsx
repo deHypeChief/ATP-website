@@ -1,6 +1,6 @@
 // import { login, register } from "@/apis/auth";
 
-import { login, register } from "../api/api.endpoints";
+import { login, register, verify } from "../api/api.endpoints";
 
 export const useAuth = () => {
     async function userLogout() {
@@ -18,18 +18,50 @@ export const useAuth = () => {
         return data.data
     };
 
-    function isAuthenticated() {
-        const isAuth = localStorage.getItem('user-payload')
-        return isAuth
+    async function isAuthenticated() {
+        const storedPayload = localStorage.getItem('user-payload');
+
+        if (!storedPayload) {
+            // No token stored, so admin is not authenticated
+            return false;
+        }
+        try {
+            const data = await verify({ token: await JSON.parse(storedPayload)?.auth.token })
+            if (data.isValid) {
+                // Token is valid, return the admin details
+                return JSON.parse(storedPayload);
+            } else {
+                // Token is invalid, log out the admin
+                await userLogout();
+                return false;
+            }
+        } catch (error) {
+            console.error("Error verifying token:", error);
+            await userLogout(); // Logout if an error occurs during token verification
+            return false;
+        }
     }
 
     function user() {
-        const payload = localStorage.getItem('user-payload')
-        if (payload) {
-            const isAuth = JSON.parse(localStorage.getItem('user-payload')?.toString())
-            return isAuth.user
+        const storedPayload = localStorage.getItem('user-payload');
+
+        if (!storedPayload) {
+            userLogout();
+            return null;
         }
-        return {}
+
+        try {
+            const isAuth = JSON.parse(storedPayload);
+            if (!isAuth?.user) {
+                userLogout();
+                return null;
+            }
+            return isAuth.user; // Return admin details if authenticated
+        } catch (error) {
+            console.error("Error parsing user payload:", error);
+            userLogout();
+            return null;
+        }
     }
 
     return { isAuthenticated, userLogout, userLogin, userRegister, user };

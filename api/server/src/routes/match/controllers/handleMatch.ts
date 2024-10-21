@@ -20,7 +20,9 @@ const handleTour = new Elysia({
 })
     .use(isAdmin_Authenticated)
     .get("/getMatches", async ({ set }) => {
-        const matches = await Match.find();
+        const matches = await Match.find()
+            .populate("user")
+            .populate("tournament");
 
         set.status = 200;
         return {
@@ -28,7 +30,7 @@ const handleTour = new Elysia({
             matches
         };
     })
-    .get("/winStatus/:matchId", async ({ set, body, params: { matchId } }) => {
+    .post("/winStatus/:matchId", async ({ set, body, params: { matchId } }) => {
         const { won, medal } = body;
         try {
             const matchFound = await Match.findById(matchId);
