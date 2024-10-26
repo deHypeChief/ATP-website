@@ -1,41 +1,39 @@
-# Use an official Node.js image as the base for installing Bun
-FROM node:18 as bun-installer
+# Use the official Node.js image as a base
+FROM node:18-alpine AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Install curl to allow for Bun installation
+RUN apk add --no-cache curl
 
 # Install Bun
 RUN curl -fsSL https://bun.sh/install | bash
+
+# Set Bun's binary directory to PATH
 ENV PATH="/root/.bun/bin:$PATH"
 
-# Create an app directory
-WORKDIR /app
-
-# Copy package.json and bun.lockb for dependency management
+# Copy package files and install dependencies
 COPY package.json bun.lockb ./
-
-# Install dependencies with Bun
 RUN bun install
 
-# Copy all app files
+# Copy the rest of your application code
 COPY . .
 
-# Build the Vite app for production
-RUN bun run build
+# Build your application (if applicable)
+RUN bun build
 
-# -- Stage 2: Production Image --
-FROM node:18-alpine
+# Use a smaller image for the production environment
+FROM node:18-alpine AS production
 
-# Install Bun for the production environment
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
-
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy the built files from the previous stage
-COPY --from=bun-installer /app/dist ./dist
-COPY --from=bun-installer /root/.bun /root/.bun
+# Copy built files from the build stage
+COPY --from=build /app .
 
-# Expose the port your app will run on
-EXPOSE 3000
+# Set the environment to production
+ENV NODE_ENV=production
 
-# Command to run the app
-CMD ["bun", "run", "serve", "-s", "dist", "-l", "3000"]
+# Start your application
+CMD ["bun", "start"]
