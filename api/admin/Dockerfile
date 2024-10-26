@@ -1,6 +1,6 @@
 # Stage 1: Build the Vite app with Bun
 FROM oven/bun:1 AS build
-WORKDIR /client
+WORKDIR /admin
 
 # Copy package.json and bun.lockb to install dependencies
 COPY package.json bun.lockb ./
@@ -16,7 +16,7 @@ RUN bun run build
 
 # Stage 2: Serve the built app with NGINX
 FROM nginx:alpine
-COPY --from=build /client/dist /usr/share/nginx/html
+COPY --from=build /admin/dist /usr/share/nginx/html
 
 # Expose the default NGINX port
 EXPOSE 80
