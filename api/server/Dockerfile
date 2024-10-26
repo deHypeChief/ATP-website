@@ -1,33 +1,18 @@
 FROM oven/bun AS build
 
-WORKDIR /app
+WORKDIR /api
 
 # Cache packages installation
-COPY package.json package.json
-COPY bun.lockb bun.lockb
+COPY package.json bun.lockb ./
 
-RUN bun install
+RUN bun install --frozen-lockfile
 
-COPY ./src ./src
-
-ENV NODE_ENV=production
-
-RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-	--target bun \
-	--outfile server \
-	./src/index.ts
-
-FROM gcr.io/distroless/base
-
-WORKDIR /app
-
-COPY --from=build /app/server server
+COPY . .
 
 ENV NODE_ENV=production
 
-CMD ["./server"]
+RUN bun run build
 
-EXPOSE 8000
+CMD ["bun", "start"]
+
+EXPOSE 8001
