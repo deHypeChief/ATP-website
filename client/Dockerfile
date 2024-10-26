@@ -1,29 +1,22 @@
-FROM node:18-alpine
+# Stage 1: Build the Vite app with Bun
+FROM oven/bun:1 AS build
+WORKDIR /client
 
-# Set working directory
-WORKDIR /app
-
-# Install curl
-RUN apk add --no-cache curl
-
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | sh
-
-# Set Bun's binary directory to PATH
-ENV PATH="/root/.bun/bin:${PATH}"
-
-# Copy package.json and install dependencies
+# Copy package.json and bun.lockb to install dependencies
 COPY package.json bun.lockb ./
-RUN bun install
 
-# Copy the rest of the application code
+# Install dependencies with Bun
+RUN bun install --frozen-lockfile
+
+# Copy all project files
 COPY . .
 
-# Build the application
+# Build the Vite app for production
 RUN bun run build
 
-# Expose the application port
-EXPOSE 3000
+# Stage 2: Serve the built app with NGINX
+FROM nginx:alpine
+COPY --from=build /client/dist /usr/share/nginx/html
 
-# Start the application using serve
-CMD ["bun", "serve", "-s", "dist"]
+# Expose the default NGINX port
+EXPOSE 80
