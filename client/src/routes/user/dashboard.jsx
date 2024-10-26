@@ -11,13 +11,13 @@ import raIcon4 from "../../libs/images/Group.svg";
 import { useQuery } from "@tanstack/react-query";
 import { checkMatch, getMatches, getNotify, getTour, getTourPayLink } from "../../libs/api/api.endpoints";
 import { useEffect, useRef, useState } from "react";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+// import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import currency from 'currency.js'
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { QRCodeCanvas } from 'qrcode.react';
-import { useMutation } from '@tanstack/react-query'
+// import { useMutation } from '@tanstack/react-query'
 import Chart from 'chart.js/auto'
 import { Link } from "react-router-dom";
 
