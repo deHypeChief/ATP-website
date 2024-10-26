@@ -1,34 +1,33 @@
-# Stage 1: Build the API server with Bun
-FROM oven/bun:1 AS build
+FROM oven/bun AS build
+
 WORKDIR /app
 
-# Copy package.json and bun.lockb to install dependencies
-COPY package.json bun.lockb ./
+# Cache packages installation
+COPY package.json package.json
+COPY bun.lockb bun.lockb
 
-# Install dependencies with Bun
-RUN bun install --frozen-lockfile
+RUN bun install
 
-# Copy all project files
-COPY . .
+COPY ./src ./src
 
-# Build the API server
-RUN bun build src/index.ts
+ENV NODE_ENV=production
 
-# Stage 2: Create a lightweight image for running the API server
-FROM oven/bun:1 AS production
+RUN bun build \
+	--compile \
+	--minify-whitespace \
+	--minify-syntax \
+	--target bun \
+	--outfile server \
+	./src/index.ts
+
+FROM gcr.io/distroless/base
+
 WORKDIR /app
 
-# Copy built application and dependencies from the previous stage
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/src/index.ts ./src/index.ts  
+COPY --from=build /app/server server
 
-# Adjust if your build outputs elsewhere
+ENV NODE_ENV=production
 
-# # Set environment variable for production
-# ENV NODE_ENV=production
+CMD ["./server"]
 
-# Expose the port your API will run on (adjust as needed)
 EXPOSE 8000
-
-# Command to run the API server
-CMD ["bun", "run", "src/index.ts"]
