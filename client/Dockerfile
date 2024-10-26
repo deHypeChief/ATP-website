@@ -1,5 +1,5 @@
 # Use the official Node.js image as a base
-FROM node:18-alpine AS build
+FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN curl -fsSL https://bun.sh/install | bash
 # Set Bun's binary directory to PATH
 ENV PATH="/root/.bun/bin:$PATH"
 
-# Copy package files and install dependencies
+# Copy package files and install dependencies using Bun
 COPY package.json bun.lockb ./
 RUN bun install
 
@@ -23,17 +23,8 @@ COPY . .
 # Build your application (if applicable)
 RUN bun build
 
-# Use a smaller image for the production environment
-FROM node:18-alpine AS production
+# Expose the desired port
+EXPOSE 3000
 
-# Set the working directory
-WORKDIR /app
-
-# Copy built files from the build stage
-COPY --from=build /app .
-
-# Set the environment to production
-ENV NODE_ENV=production
-
-# Start your application
-CMD ["bun", "start"]
+# Serve the application using Bun
+CMD ["bun", "serve", "dist"]
